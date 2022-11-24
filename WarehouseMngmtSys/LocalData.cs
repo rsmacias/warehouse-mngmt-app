@@ -11,7 +11,7 @@ internal class LocalData {
     }
 
     public static void GenerateAndSave() {
-        var warehouses = new Warehouse[] {
+        var warehouses = new warehouseManagementSystem.Domain.Warehouse[] {
             new() {
                 Id = Guid.NewGuid(),
                 Location = "Sweden"
@@ -26,7 +26,7 @@ internal class LocalData {
             }
         };
 
-        var items = new Item[] {
+        var items = new warehouseManagementSystem.Domain.Item[] {
             new() {
                 Id = Guid.NewGuid(),
                 Name = "Shure SM7b", 
@@ -45,12 +45,12 @@ internal class LocalData {
             }
         };
 
-        var shippingProviders = new ShippingProvider[] {
+        var shippingProviders = new warehouseManagementSystem.Domain.ShippingProvider[] {
             new() { Id = Guid.NewGuid(), Name = "Swedish Postal Service", FreightCost = 10m },
             new() { Id = Guid.NewGuid(), Name = "United States Postal Service", FreightCost = 5m }
         };
 
-        var customer = new Customer() {
+        var customer = new warehouseManagementSystem.Domain.Customer() {
             Id = Guid.NewGuid(),
             Name = "Filip Ekberg",
             Address = "Vallda",
@@ -59,11 +59,11 @@ internal class LocalData {
             PostalCode = "434 94"
         };
 
-        var orders = new Order[] {
+        var orders = new warehouseManagementSystem.Domain.Order[] {
             new() {
                 Id = Guid.NewGuid(),
                 Customer = customer,
-                LineItems = new LineItem[] {
+                LineItems = new warehouseManagementSystem.Domain.LineItem[] {
                     new() { Id = Guid.NewGuid(), Item = items[0], Quantity = 2 },
                     new() { Id = Guid.NewGuid(), Item = items[1], Quantity = 1 }
                 },
@@ -72,7 +72,7 @@ internal class LocalData {
             new() {
                 Id = Guid.NewGuid(),
                 Customer = customer,
-                LineItems = new LineItem[] {
+                LineItems = new warehouseManagementSystem.Domain.LineItem[] {
                     new() { Id = Guid.NewGuid(), Item = items[0], Quantity = 4 }
                 },
                 ShippingProvider = shippingProviders[1]
