@@ -1,9 +1,12 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Data.SqlClient;
 
+string dataSourcesPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).FullName}\\WarehouseMngmtData";
 
 // sqlite version
-using SqliteConnection connection_sqlite = new SqliteConnection(@"Data Source=C:\prjs\prs\GitHub\rsmacias\warehouse-mngmt-app\WarehouseMngmtData\warehouse.db");
+string sqliteConnectionString = $"Data Source={dataSourcesPath}\\warehouse.db";
+
+using SqliteConnection connection_sqlite = new SqliteConnection(sqliteConnectionString);
 
 using SqliteCommand command_sqlite = new SqliteCommand("SELECT * FROM [Orders]", connection_sqlite);
 
@@ -16,7 +19,9 @@ while(reader_sqlite.Read()) {
 }
 
 // localdb version
-using SqlConnection connection = new SqlConnection(@"Server=(localdb)\MSSQLLocalDB;Integrated Security=true;AttachDbFilename=C:\prjs\prs\GitHub\rsmacias\warehouse-mngmt-app\WarehouseMngmtData\WarehouseManagement.mdf");
+string sqlConnectionString = $"Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;AttachDbFilename={dataSourcesPath}\\WarehouseManagement.mdf";
+
+using SqlConnection connection = new SqlConnection(sqlConnectionString);
 
 using SqlCommand command = new SqlCommand("SELECT * FROM [Orders]", connection);
 
