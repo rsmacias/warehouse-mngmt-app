@@ -15,11 +15,12 @@ Console.WriteLine($"isWindowsPlatform: {isWindowsPlatform}");
 string dataSourcesPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).FullName}\\{dataSourcesDirectory}";
 string connectionString = string.Empty;
 
+connectionString = isWindowsPlatform ? config.GetConnectionString("SqlVersionDb") ?? throw new ArgumentNullException() 
+                                     : config.GetConnectionString("SqliteVersionDb") ?? throw new ArgumentNullException();
+connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
+
 if (!isWindowsPlatform) {
     // sqlite version for Cross Platform
-    connectionString = config.GetConnectionString("SqliteVersionDb") ?? throw new ArgumentNullException();
-    connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
-
     using SqliteConnection connection_sqlite = new SqliteConnection(connectionString);
 
     using SqliteCommand command_sqlite = new SqliteCommand("SELECT * FROM [Orders]", connection_sqlite);
@@ -33,11 +34,6 @@ if (!isWindowsPlatform) {
     }
 } else {
     // localdb version for Windows Platform
-    connectionString = config.GetConnectionString("SqlVersionDb") ?? throw new ArgumentNullException();
-    connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
-
-    //string sqlConnectionString = $"Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;AttachDbFilename={dataSourcesPath}\\WarehouseManagement.mdf";
-
     using SqlConnection connection = new SqlConnection(connectionString);
 
     using SqlCommand command = new SqlCommand("SELECT * FROM [Orders]", connection);
