@@ -2,6 +2,10 @@
 using Microsoft.Data.Sqlite;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+
+using warehouseManagementSystem;
+
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -22,32 +26,18 @@ if (connectionString.Contains(DATASOURCE_KEY_TO_REPLACE)) {
     connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
 }
 
-if (!isWindowsPlatform) {
-    // sqlite version for Cross Platform
-    using SqliteConnection connection_sqlite = new SqliteConnection(connectionString);
+var optionsBuilder = new DbContextOptionsBuilder<WarehouseContext>();
 
-    using SqliteCommand command_sqlite = new SqliteCommand("SELECT * FROM [Orders]", connection_sqlite);
-
-    connection_sqlite.Open();
-
-    using SqliteDataReader reader_sqlite = command_sqlite.ExecuteReader();
-
-    while(reader_sqlite.Read()) {
-        Console.WriteLine(reader_sqlite["Id"]);
-    }
+if (isWindowsPlatform) {
+    optionsBuilder.UseSqlServer(connectionString);
 } else {
-    // localdb version for Windows Platform
-    using SqlConnection connection = new SqlConnection(connectionString);
+    optionsBuilder.UseSqlite(connectionString);
+}
 
-    using SqlCommand command = new SqlCommand("SELECT * FROM [Orders]", connection);
+using var context = new WarehouseContext(optionsBuilder.Options);
 
-    connection.Open();
-
-    using SqlDataReader reader = command.ExecuteReader();
-
-    while(reader.Read()) {
-        Console.WriteLine(reader["Id"]);
-    }
+foreach (var order in context.Orders) {
+    Console.WriteLine($"Order Id: {order.Id}");
 }
 
 Console.ReadLine();
