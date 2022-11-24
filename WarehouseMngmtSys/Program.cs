@@ -17,7 +17,10 @@ string connectionString = string.Empty;
 
 connectionString = isWindowsPlatform ? config.GetConnectionString("SqlVersionDb") ?? throw new ArgumentNullException() 
                                      : config.GetConnectionString("SqliteVersionDb") ?? throw new ArgumentNullException();
-connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
+
+if (connectionString.Contains(DATASOURCE_KEY_TO_REPLACE)) {
+    connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
+}
 
 if (!isWindowsPlatform) {
     // sqlite version for Cross Platform
