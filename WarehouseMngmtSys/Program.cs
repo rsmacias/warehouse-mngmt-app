@@ -1,36 +1,54 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Data.Common;
+using Microsoft.Data.Sqlite;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
-string dataSourcesPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).FullName}\\WarehouseMngmtData";
+IConfiguration config = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
 
-// sqlite version
-string sqliteConnectionString = $"Data Source={dataSourcesPath}\\warehouse.db";
+const string DATASOURCE_KEY_TO_REPLACE = "{dataSourcesPath}";
+bool isWindowsPlatform = config.GetValue<bool>("Settings:WindowsPlatform");
+string dataSourcesDirectory = config.GetValue<string>("Settings:DataSourcesDirectory") ?? "\\WarehouseMngmtData";
+Console.WriteLine($"isWindowsPlatform: {isWindowsPlatform}");
 
-using SqliteConnection connection_sqlite = new SqliteConnection(sqliteConnectionString);
+string dataSourcesPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).FullName}\\{dataSourcesDirectory}";
+string connectionString = string.Empty;
 
-using SqliteCommand command_sqlite = new SqliteCommand("SELECT * FROM [Orders]", connection_sqlite);
+if (!isWindowsPlatform) {
+    // sqlite version for Cross Platform
+    connectionString = config.GetConnectionString("SqliteVersionDb") ?? throw new ArgumentNullException();
+    connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
 
-connection_sqlite.Open();
+    using SqliteConnection connection_sqlite = new SqliteConnection(connectionString);
 
-using SqliteDataReader reader_sqlite = command_sqlite.ExecuteReader();
+    using SqliteCommand command_sqlite = new SqliteCommand("SELECT * FROM [Orders]", connection_sqlite);
 
-while(reader_sqlite.Read()) {
-    Console.WriteLine(reader_sqlite["Id"]);
-}
+    connection_sqlite.Open();
 
-// localdb version
-string sqlConnectionString = $"Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;AttachDbFilename={dataSourcesPath}\\WarehouseManagement.mdf";
+    using SqliteDataReader reader_sqlite = command_sqlite.ExecuteReader();
 
-using SqlConnection connection = new SqlConnection(sqlConnectionString);
+    while(reader_sqlite.Read()) {
+        Console.WriteLine(reader_sqlite["Id"]);
+    }
+} else {
+    // localdb version for Windows Platform
+    connectionString = config.GetConnectionString("SqlVersionDb") ?? throw new ArgumentNullException();
+    connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
 
-using SqlCommand command = new SqlCommand("SELECT * FROM [Orders]", connection);
+    //string sqlConnectionString = $"Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;AttachDbFilename={dataSourcesPath}\\WarehouseManagement.mdf";
 
-connection.Open();
+    using SqlConnection connection = new SqlConnection(connectionString);
 
-using SqlDataReader reader = command.ExecuteReader();
+    using SqlCommand command = new SqlCommand("SELECT * FROM [Orders]", connection);
 
-while(reader.Read()) {
-    Console.WriteLine(reader["Id"]);
+    connection.Open();
+
+    using SqlDataReader reader = command.ExecuteReader();
+
+    while(reader.Read()) {
+        Console.WriteLine(reader["Id"]);
+    }
 }
 
 Console.ReadLine();
