@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Warehouse.Data.SQLite;
+namespace Warehouse.Data;
 
 public partial class LineItem
 {

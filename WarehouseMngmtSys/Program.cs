@@ -4,16 +4,9 @@ using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
-using warehouseManagementSystem;
-
+using Warehouse.Data;
 using Warehouse.Data.SQLite;
-
-using Customer = Warehouse.Data.SQLite.Customer;
-using Item = Warehouse.Data.SQLite.Item;
-using LineItem = Warehouse.Data.SQLite.LineItem;
-using Order = Warehouse.Data.SQLite.Order;
-using ShippingProvider = Warehouse.Data.SQLite.ShippingProvider;
-using Warehouse = Warehouse.Data.SQLite.Warehouse;
+using Warehouse.Data.SqlServer;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")

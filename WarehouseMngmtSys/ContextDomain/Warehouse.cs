@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace warehouseManagementSystem;
+namespace Warehouse.Data;
 
 public partial class Warehouse
 {

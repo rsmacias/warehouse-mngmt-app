@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
-namespace warehouseManagementSystem;
+namespace Warehouse.Data.SqlServer;
 
-public partial class WarehouseContext : DbContext
+public partial class WarehouseSqlServerContext : DbContext
 {
-    public WarehouseContext()
-    {
+
+    private readonly string connectionString = null;
+
+    public WarehouseSqlServerContext(string connectionString) {
+        this.connectionString = connectionString;
     }
 
-    public WarehouseContext(DbContextOptions<WarehouseContext> options)
-        : base(options)
-    {
+    public WarehouseSqlServerContext(DbContextOptions<WarehouseSqlServerContext> options)
+        : base(options) {
     }
 
     public virtual DbSet<Customer> Customers { get; set; }
@@ -26,6 +30,15 @@ public partial class WarehouseContext : DbContext
     public virtual DbSet<ShippingProvider> ShippingProviders { get; set; }
 
     public virtual DbSet<Warehouse> Warehouses { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        optionsBuilder.UseSqlite(connectionString);
+        optionsBuilder.UseLoggerFactory(
+            new LoggerFactory(new[] {
+                new DebugLoggerProvider()
+            })
+        );
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
