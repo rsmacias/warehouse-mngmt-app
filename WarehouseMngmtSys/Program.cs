@@ -2,12 +2,18 @@
 using Microsoft.Data.Sqlite;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Debug;
 using Microsoft.EntityFrameworkCore;
 
 using warehouseManagementSystem;
 
+using Warehouse.Data.SQLite;
+
+using Customer = Warehouse.Data.SQLite.Customer;
+using Item = Warehouse.Data.SQLite.Item;
+using LineItem = Warehouse.Data.SQLite.LineItem;
+using Order = Warehouse.Data.SQLite.Order;
+using ShippingProvider = Warehouse.Data.SQLite.ShippingProvider;
+using Warehouse = Warehouse.Data.SQLite.Warehouse;
 
 IConfiguration config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -28,20 +34,7 @@ if (connectionString.Contains(DATASOURCE_KEY_TO_REPLACE)) {
     connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
 }
 
-var optionsBuilder = new DbContextOptionsBuilder<WarehouseContext>();
-
-optionsBuilder.UseLoggerFactory(
-    new LoggerFactory(new[] {
-        new DebugLoggerProvider()
-    }));
-
-if (isWindowsPlatform) {
-    optionsBuilder.UseSqlServer(connectionString);
-} else {
-    optionsBuilder.UseSqlite(connectionString);
-}
-
-using var context = new WarehouseContext(optionsBuilder.Options);
+using var context = new WarehouseSQLiteContext(connectionString);
 
 var showAllOrders = () => {
     foreach (var order in context.Orders

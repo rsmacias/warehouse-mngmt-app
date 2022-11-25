@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 
 namespace Warehouse.Data.SQLite;
 
 public partial class WarehouseSQLiteContext : DbContext
 {
-    public WarehouseSQLiteContext()
-    {
+
+    private readonly string connectionString = null;
+
+    public WarehouseSQLiteContext(string connectionString) {
+        this.connectionString = connectionString;
     }
 
     public WarehouseSQLiteContext(DbContextOptions<WarehouseSQLiteContext> options)
-        : base(options)
-    {
+        : base(options) {
     }
 
     public virtual DbSet<Customer> Customers { get; set; }
@@ -27,9 +31,14 @@ public partial class WarehouseSQLiteContext : DbContext
 
     public virtual DbSet<Warehouse> Warehouses { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlite("Data Source=C:\\prjs\\prs\\Github\\rsmacias\\warehouse-mngmt-app\\WarehouseMngmtData\\warehouse.db");
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        optionsBuilder.UseSqlite(connectionString);
+        optionsBuilder.UseLoggerFactory(
+            new LoggerFactory(new[] {
+                new DebugLoggerProvider()
+            })
+        );
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
