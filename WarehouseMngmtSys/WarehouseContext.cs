@@ -31,7 +31,7 @@ public partial class WarehouseContext : DbContext
     {
         modelBuilder.Entity<Customer>(entity =>
         {
-            entity.Property(e => e.Id).ValueGeneratedNever();
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<Item>(entity =>
