@@ -120,6 +120,19 @@ var updateCustomerByName = () => {
     }
 };
 
+var removeCustomerWithOrders = () => {
+    Console.WriteLine("==================DELETE CUSTOMER==================");
+    var toDelete = context.Customers.FirstOrDefault(customer => customer.Orders.Any());
+    if(toDelete != null) {
+        Console.WriteLine($"Customer {toDelete.Name} will be deleted.");
+        context.Customers.Remove(toDelete);
+        context.SaveChanges();
+        Console.WriteLine($"Customer {toDelete.Name} deleted!");
+    } else {
+        Console.WriteLine("Customer not found!");
+    }
+};
+
 
 var showMenu = () => {
     Console.WriteLine("------------------------------------------------");
@@ -127,6 +140,7 @@ var showMenu = () => {
     Console.WriteLine("1.- Select all Orders");
     Console.WriteLine("2.- New Customer");
     Console.WriteLine("3.- Update Customer");
+    Console.WriteLine("4.- Delete Customer with Orders");
 };
 
 var gotToOption = (string option) => {
@@ -135,6 +149,7 @@ var gotToOption = (string option) => {
         case "1" : showAllOrders(); break;
         case "2" : newCustomer(); break;
         case "3" : updateCustomerByName(); break;
+        case "4" : removeCustomerWithOrders(); break;
         default: break;
     }
     Console.WriteLine("Press any key to continue...");
