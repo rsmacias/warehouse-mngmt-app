@@ -2,6 +2,8 @@
 using Microsoft.Data.Sqlite;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Debug;
 using Microsoft.EntityFrameworkCore;
 
 using warehouseManagementSystem;
@@ -27,6 +29,11 @@ if (connectionString.Contains(DATASOURCE_KEY_TO_REPLACE)) {
 }
 
 var optionsBuilder = new DbContextOptionsBuilder<WarehouseContext>();
+
+optionsBuilder.UseLoggerFactory(
+    new LoggerFactory(new[] {
+        new DebugLoggerProvider()
+    }));
 
 if (isWindowsPlatform) {
     optionsBuilder.UseSqlServer(connectionString);
