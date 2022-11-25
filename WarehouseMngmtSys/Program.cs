@@ -36,7 +36,7 @@ if (isWindowsPlatform) {
 
 using var context = new WarehouseContext(optionsBuilder.Options);
 
-var showAll = () => {
+var showAllOrders = () => {
     foreach (var order in context.Orders
                             .Include(order => order.Customer)
                             .Include(order => order.ShippingProvider)
@@ -52,11 +52,10 @@ var showAll = () => {
             Console.WriteLine($"\tPrice: {lineItem.Item.Price}");    
         }
     }
-    Console.WriteLine("Press any key to continue...");
-    Console.ReadLine();
 };
 
 var newCustomer = () => {
+    Console.WriteLine("==================CREATE CUSTOMER==================");
     Console.WriteLine("Enter Customer data...");
 
     Console.Write($"Name: ");
@@ -81,23 +80,65 @@ var newCustomer = () => {
     context.Customers.Add(newCustomer);
     context.SaveChanges();
 
-    Console.WriteLine("New customer added.\r\nPress any key to continue...");
-    Console.ReadLine();
+    Console.WriteLine($"Customer created!");
 };
+
+var wantToUpdateValueField = bool (string field, string currentValue) => {
+    Console.WriteLine($"Current value for {field}: {currentValue}");
+    Console.Write($"Do you want to update it? Y/N: ");
+    return Console.ReadLine().ToUpper().Equals("Y");
+};
+
+var getCustomerField = string (string field, string currentValue) => {
+    Console.WriteLine();
+    if (wantToUpdateValueField(field, currentValue)){
+        Console.Write($"Get new value: ");
+        return Console.ReadLine();
+    }
+    return currentValue;
+};
+
+var updateCustomerByName = () => {
+    Console.WriteLine("==================UPDATE CUSTOMER==================");
+    Console.Write("Enter the name of the customer you want to update: ");
+    var filterByName = Console.ReadLine();
+
+    var customerToUpdate = context.Customers.FirstOrDefault(customer => customer.Name == filterByName);
+    if (customerToUpdate != null) {
+        customerToUpdate.Name = getCustomerField("Name", customerToUpdate.Name);
+        customerToUpdate.Address = getCustomerField("Address", customerToUpdate.Address);
+        customerToUpdate.PostalCode = getCustomerField("Zip Code", customerToUpdate.PostalCode);
+        customerToUpdate.Country = getCustomerField("Country", customerToUpdate.Country);
+        customerToUpdate.PhoneNumber = getCustomerField("Phone Number", customerToUpdate.PhoneNumber);
+
+        context.Customers.Update(customerToUpdate);
+        context.SaveChanges();
+
+        Console.WriteLine($"Customer updated!");
+    } else {
+        Console.WriteLine($"Customer not found!");
+    }
+};
+
 
 var showMenu = () => {
     Console.WriteLine("------------------------------------------------");
     Console.WriteLine("0.- Exit");
-    Console.WriteLine("1.- Select All");
+    Console.WriteLine("1.- Select all Orders");
     Console.WriteLine("2.- New Customer");
+    Console.WriteLine("3.- Update Customer");
 };
 
 var gotToOption = (string option) => {
+    Console.WriteLine();
     switch(option) {
-        case "1" : showAll(); break;
+        case "1" : showAllOrders(); break;
         case "2" : newCustomer(); break;
+        case "3" : updateCustomerByName(); break;
         default: break;
     }
+    Console.WriteLine("Press any key to continue...");
+    Console.ReadLine();
 };
 
 string option = string.Empty;
@@ -111,3 +152,4 @@ do {
 } while(option != "0");
 
 Console.WriteLine("Bye!");
+
