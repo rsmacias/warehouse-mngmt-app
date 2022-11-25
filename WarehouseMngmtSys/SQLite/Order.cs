@@ -5,11 +5,11 @@ namespace Warehouse.Data.SQLite;
 
 public partial class Order
 {
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
 
-    public string CustomerId { get; set; } = null!;
+    public Guid CustomerId { get; set; }
 
-    public string ShippingProviderId { get; set; } = null!;
+    public Guid ShippingProviderId { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
 

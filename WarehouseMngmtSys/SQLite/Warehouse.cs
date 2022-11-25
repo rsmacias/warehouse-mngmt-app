@@ -5,7 +5,7 @@ namespace Warehouse.Data.SQLite;
 
 public partial class Warehouse
 {
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
 
     public string Location { get; set; } = null!;
 

@@ -5,15 +5,15 @@ namespace Warehouse.Data.SQLite;
 
 public partial class LineItem
 {
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
 
-    public string ItemId { get; set; } = null!;
+    public Guid ItemId { get; set; }
 
     public long Quantity { get; set; }
 
-    public string? OrderId { get; set; }
+    public Guid? OrderId { get; set; }
 
-    public string? ShippingProviderId { get; set; }
+    public Guid? ShippingProviderId { get; set; }
 
     public virtual Item Item { get; set; } = null!;
 
