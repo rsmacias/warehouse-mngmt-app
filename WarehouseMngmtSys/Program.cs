@@ -36,8 +36,20 @@ if (isWindowsPlatform) {
 
 using var context = new WarehouseContext(optionsBuilder.Options);
 
-foreach (var order in context.Orders) {
+foreach (var order in context.Orders
+                        .Include(order => order.Customer)
+                        .Include(order => order.ShippingProvider)
+                        .Include(order => order.LineItems)
+                        .ThenInclude(lineItem => lineItem.Item)) {
+    Console.WriteLine("------------------------------------------------");
     Console.WriteLine($"Order Id: {order.Id}");
+    Console.WriteLine($"Customer: {order.Customer.Name}");
+    Console.WriteLine($"Shipping Provider: {order.ShippingProvider.Name}");
+
+    foreach (var lineItem in order.LineItems) {
+        Console.WriteLine($"\tItem: {lineItem.Item.Name}");
+        Console.WriteLine($"\tPrice: {lineItem.Item.Price}");    
+    }
 }
 
 Console.ReadLine();
