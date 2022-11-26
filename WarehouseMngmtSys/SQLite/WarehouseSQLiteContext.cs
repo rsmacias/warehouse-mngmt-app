@@ -6,30 +6,12 @@ using Microsoft.Extensions.Logging.Debug;
 
 namespace Warehouse.Data.SQLite;
 
-public partial class WarehouseSQLiteContext : DbContext
+public partial class WarehouseSQLiteContext : WarehouseContext
 {
 
-    private readonly string connectionString = null;
-
-    public WarehouseSQLiteContext(string connectionString) {
-        this.connectionString = connectionString;
+    public WarehouseSQLiteContext(string connectionString)
+        : base(connectionString) {
     }
-
-    public WarehouseSQLiteContext(DbContextOptions<WarehouseSQLiteContext> options)
-        : base(options) {
-    }
-
-    public virtual DbSet<Customer> Customers { get; set; }
-
-    public virtual DbSet<Item> Items { get; set; }
-
-    public virtual DbSet<LineItem> LineItems { get; set; }
-
-    public virtual DbSet<Order> Orders { get; set; }
-
-    public virtual DbSet<ShippingProvider> ShippingProviders { get; set; }
-
-    public virtual DbSet<Warehouse> Warehouses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         optionsBuilder.UseSqlite(connectionString);

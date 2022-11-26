@@ -6,33 +6,15 @@ using Microsoft.Extensions.Logging.Debug;
 
 namespace Warehouse.Data.SqlServer;
 
-public partial class WarehouseSqlServerContext : DbContext
+public partial class WarehouseSqlServerContext : WarehouseContext
 {
 
-    private readonly string connectionString = null;
-
-    public WarehouseSqlServerContext(string connectionString) {
-        this.connectionString = connectionString;
+    public WarehouseSqlServerContext(string connectionString)
+        : base(connectionString) {
     }
-
-    public WarehouseSqlServerContext(DbContextOptions<WarehouseSqlServerContext> options)
-        : base(options) {
-    }
-
-    public virtual DbSet<Customer> Customers { get; set; }
-
-    public virtual DbSet<Item> Items { get; set; }
-
-    public virtual DbSet<LineItem> LineItems { get; set; }
-
-    public virtual DbSet<Order> Orders { get; set; }
-
-    public virtual DbSet<ShippingProvider> ShippingProviders { get; set; }
-
-    public virtual DbSet<Warehouse> Warehouses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        optionsBuilder.UseSqlite(connectionString);
+        optionsBuilder.UseSqlServer(connectionString);
         optionsBuilder.UseLoggerFactory(
             new LoggerFactory(new[] {
                 new DebugLoggerProvider()

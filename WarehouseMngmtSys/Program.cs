@@ -1,7 +1,4 @@
-﻿using System.Data.Common;
-using Microsoft.Data.Sqlite;
-using System.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 
 using Warehouse.Data;
@@ -27,7 +24,7 @@ if (connectionString.Contains(DATASOURCE_KEY_TO_REPLACE)) {
     connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
 }
 
-using var context = new WarehouseSQLiteContext(connectionString);
+using WarehouseContext context = isWindowsPlatform ?  new WarehouseSqlServerContext(connectionString) : new WarehouseSQLiteContext(connectionString);
 
 var showAllOrders = () => {
     foreach (var order in context.Orders
@@ -125,7 +122,6 @@ var removeCustomerWithOrders = () => {
         Console.WriteLine("Customer not found!");
     }
 };
-
 
 var showMenu = () => {
     Console.WriteLine("------------------------------------------------");

@@ -9,7 +9,7 @@ public partial class ShippingProvider
 
     public string Name { get; set; } = null!;
 
-    public string FreightCost { get; set; } = null!;
+    public decimal FreightCost { get; set; }
 
     public virtual ICollection<LineItem> LineItems { get; } = new List<LineItem>();
 
