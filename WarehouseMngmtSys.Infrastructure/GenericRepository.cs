@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace warehouseManagementSystem.Infrastructure;
 
@@ -12,26 +13,33 @@ public abstract class GenericRepository<T>
         }
 
         public T Add(T entity) {
-            throw new NotImplementedException();            
+            var addedEntity = context.Add(entity).Entity;
+            return addedEntity;    
         }
         
         public T Update(T entity) {
-            throw new NotImplementedException();
+            var updatedEntity = context.Update(entity).Entity;
+            return updatedEntity;
         }
         
         public T Get(Guid id) {
-            throw new NotImplementedException();
+            return context.Find<T>(id);
         }
         
         public IEnumerable<T> All() {
-            throw new NotImplementedException();
+            var all = context.Set<T>().ToList();
+            return all;
         }
         
         public IEnumerable<T> Find(Expression<Func<T, bool>> predicate) {
-            throw new NotImplementedException();
+            var result = context.Set<T>()
+                                .AsQueryable()
+                                .Where(predicate)
+                                .ToList();
+            return result;
         }
 
         public void SaveChanges() {
-            throw new NotImplementedException();
+            context.SaveChanges();
         }
 }
