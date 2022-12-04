@@ -1,9 +1,30 @@
 using warehouseManagementSystem.Web.Data;
 using Microsoft.EntityFrameworkCore;
 
+const string DATASOURCE_KEY_TO_REPLACE = "{dataSourcesPath}";
+
+var GetConnectionString = string (bool isWindowsPlatform, IConfiguration config) => {
+    string connectionString = string.Empty;
+    string dataSourcesDirectory = config.GetValue<string>("Settings:DataSourcesDirectory") ?? "\\WarehouseMngmtData";
+
+    string dataSourcesPath = $"{Directory.GetParent(Directory.GetCurrentDirectory()).FullName}\\{dataSourcesDirectory}";
+
+    connectionString = isWindowsPlatform ? config.GetConnectionString("SqlVersionDb") ?? throw new ArgumentNullException() 
+                                        : config.GetConnectionString("SqliteVersionDb") ?? throw new ArgumentNullException();
+
+    if (connectionString.Contains(DATASOURCE_KEY_TO_REPLACE)) {
+        connectionString = connectionString.Replace(DATASOURCE_KEY_TO_REPLACE, dataSourcesPath);
+    }
+
+    return connectionString;
+};
+
 var builder = WebApplication.CreateBuilder(args);
 
-string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=WarehouseManagement;Integrated Security=True;";
+bool isWindowsPlatform = builder.Configuration.GetValue<bool>("Settings:WindowsPlatform");
+Console.WriteLine($"isWindowsPlatform: {isWindowsPlatform}");
+
+string connectionString = GetConnectionString(isWindowsPlatform, builder.Configuration);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
