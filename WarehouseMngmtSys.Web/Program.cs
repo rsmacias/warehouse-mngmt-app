@@ -1,4 +1,4 @@
-using warehouseManagementSystem.Web.Data;
+using warehouseManagementSystem.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 const string DATASOURCE_KEY_TO_REPLACE = "{dataSourcesPath}";
@@ -28,12 +28,17 @@ string connectionString = GetConnectionString(isWindowsPlatform, builder.Configu
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-// Add Data Context as a service 
+// Add Data Context as a service:
 if(isWindowsPlatform){
     builder.Services.AddDbContext<WarehouseContext>(options => options.UseSqlServer(connectionString));
 } else {
     builder.Services.AddDbContext<WarehouseContext>(options => options.UseSqlite(connectionString));
 }
+// Registering Repository dependecy injection:
+builder.Services.AddTransient<IRepository<Order>, OrderRepository>();
+builder.Services.AddTransient<IRepository<Item>, ItemRepository>();
+builder.Services.AddTransient<IRepository<ShippingProvider>, ShippingProviderRepository>();
+builder.Services.AddTransient<IRepository<Customer>, CustomerRepository>();
 
 var app = builder.Build();
 

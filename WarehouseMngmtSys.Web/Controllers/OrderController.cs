@@ -1,31 +1,37 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using warehouseManagementSystem.Web.Data;
+using warehouseManagementSystem.Infrastructure;
 using warehouseManagementSystem.Web.Models;
 
 namespace WarehouseManagementSystem.Web.Controllers;
 
 public class OrderController : Controller {
-    private readonly WarehouseContext context = null;
 
-    public OrderController(WarehouseContext context) {
-        this.context = context;
+    private readonly IRepository<Order> _orderRepository;
+    private readonly IRepository<ShippingProvider> _shippingProviderRepository;
+    private readonly IRepository<Item> _itemRepository;
+
+    public OrderController(IRepository<Order> orderRepository, 
+                           IRepository<ShippingProvider> shippingProviderRepository, 
+                           IRepository<Item> itemRepository) {
+        _orderRepository = orderRepository;
+        _shippingProviderRepository = shippingProviderRepository;
+        _itemRepository = itemRepository;
     }
 
     public IActionResult Index() {
-        var orders = context.Orders
-            .Include(order => order.LineItems)
-            .ThenInclude(lineItem => lineItem.Item)
-            .Where(order => 
-            order.CreatedAt > DateTime.UtcNow.AddDays(-1)
-        ).ToList();
+        var orders = 
+            _orderRepository.Find(
+                    order => 
+                    order.CreatedAt > DateTime.UtcNow.AddDays(-1)
+            );
 
         return View(orders);
     }
 
     public IActionResult Create() {
-        var items = context.Items.ToList();
+        var items = _itemRepository.All();  
 
         return View(items);
     }
@@ -58,13 +64,12 @@ public class OrderController : Controller {
                 .ToList(),
 
             Customer = customer,
-            ShippingProvider = context.ShippingProviders.First(),
+            ShippingProviderId = _shippingProviderRepository.All().First().Id, 
             CreatedAt = DateTimeOffset.UtcNow
         };
 
-        context.Orders.Add(order);
-
-        context.SaveChanges();
+        _orderRepository.Add(order);
+        _orderRepository.SaveChanges();
 
         return Ok("Order Created");
     }
