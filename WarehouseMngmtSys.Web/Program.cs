@@ -30,9 +30,9 @@ string connectionString = GetConnectionString(isWindowsPlatform, builder.Configu
 builder.Services.AddControllersWithViews();
 // Add Data Context as a service:
 if(isWindowsPlatform){
-    builder.Services.AddDbContext<WarehouseContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddTransient<WarehouseContext, WarehouseSqlServerContext>(x => new WarehouseSqlServerContext(connectionString));
 } else {
-    builder.Services.AddDbContext<WarehouseContext>(options => options.UseSqlite(connectionString));
+    builder.Services.AddTransient<WarehouseContext, WarehouseSQLiteContext>(x => new WarehouseSQLiteContext(connectionString));
 }
 // Registering Repository dependecy injection:
 builder.Services.AddTransient<IRepository<Order>, OrderRepository>();
