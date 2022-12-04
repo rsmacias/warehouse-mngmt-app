@@ -15,5 +15,6 @@ namespace warehouseManagementSystem.Web.Data
         public decimal FreightCost { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<LineItem> LineItems { get; } = new List<LineItem>();
     }
 }

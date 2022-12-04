@@ -9,8 +9,10 @@ namespace warehouseManagementSystem.Web.Data
         public Guid ItemId { get; set; }
         public int Quantity { get; set; }
         public Guid OrderId { get; set; }
+        public Guid? ShippingProviderId { get; set; }
 
         public virtual Item Item { get; set; } = null!;
         public virtual Order Order { get; set; } = null!;
+        public virtual ShippingProvider? ShippingProvider { get; set; }
     }
 }
