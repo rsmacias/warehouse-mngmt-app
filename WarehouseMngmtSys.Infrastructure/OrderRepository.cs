@@ -16,4 +16,16 @@ public class OrderRepository : GenericRepository<Order> {
                         .Where(predicate)
                         .ToList();
     }
+
+    public override Order Update(Order entity) {
+        Order toUpdate = context.Orders
+                            .Include(order => order.LineItems)
+                            .ThenInclude(lineItem => lineItem.Item)
+                            .Single(order => order.Id == entity.Id);
+        
+        toUpdate.CreatedAt = entity.CreatedAt;
+        toUpdate.LineItems = entity.LineItems;
+
+        return base.Update(toUpdate);
+    }
 }
