@@ -4,10 +4,10 @@ using warehouseManagementSystem.Web.Data;
 namespace warehouseManagementSystem.Web.Controllers;
 
 public class CustomerController : Controller {
-    private WarehouseContext context;
+    private readonly WarehouseContext context = null;
 
-    public CustomerController() {
-        context = new WarehouseContext();
+    public CustomerController(WarehouseContext context) {
+        this.context = context;
     }
 
     public IActionResult Index(Guid? id) {

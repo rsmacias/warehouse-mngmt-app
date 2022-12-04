@@ -7,10 +7,10 @@ using warehouseManagementSystem.Web.Models;
 namespace WarehouseManagementSystem.Web.Controllers;
 
 public class OrderController : Controller {
-    private WarehouseContext context;
+    private readonly WarehouseContext context = null;
 
-    public OrderController() {
-        context = new WarehouseContext();
+    public OrderController(WarehouseContext context) {
+        this.context = context;
     }
 
     public IActionResult Index() {

@@ -1,7 +1,14 @@
+using warehouseManagementSystem.Web.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+string connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=WarehouseManagement;Integrated Security=True;";
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+// Add Data Context as a service 
+builder.Services.AddDbContext<WarehouseContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
