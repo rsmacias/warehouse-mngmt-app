@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/WarehouseMngmtSys/warehouseManagementSystem.csproj",
+                "${workspaceFolder}/WarehouseMngmtSys.Web/warehouseManagementSystem.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/WarehouseMngmtSys/warehouseManagementSystem.csproj",
+                "${workspaceFolder}/WarehouseMngmtSys.Web/warehouseManagementSystem.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/WarehouseMngmtSys/warehouseManagementSystem.csproj"
+                "${workspaceFolder}/WarehouseMngmtSys.Web/warehouseManagementSystem.Web.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
