@@ -29,7 +29,11 @@ string connectionString = GetConnectionString(isWindowsPlatform, builder.Configu
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 // Add Data Context as a service 
-builder.Services.AddDbContext<WarehouseContext>(options => options.UseSqlServer(connectionString));
+if(isWindowsPlatform){
+    builder.Services.AddDbContext<WarehouseContext>(options => options.UseSqlServer(connectionString));
+} else {
+    builder.Services.AddDbContext<WarehouseContext>(options => options.UseSqlite(connectionString));
+}
 
 var app = builder.Build();
 
