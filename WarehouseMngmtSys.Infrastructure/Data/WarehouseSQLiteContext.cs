@@ -65,6 +65,9 @@ public partial class WarehouseSQLiteContext : WarehouseContext
             entity.HasOne(d => d.Customer).WithMany(p => p.Orders).HasForeignKey(d => d.CustomerId);
 
             entity.HasOne(d => d.ShippingProvider).WithMany(p => p.Orders).HasForeignKey(d => d.ShippingProviderId);
+
+            entity.Property(o => o.CreatedAt).HasConversion(v => v.ToString(), 
+                                                            v => DateTimeOffset.Parse(v));
         });
 
         modelBuilder.Entity<Warehouse>(entity =>
