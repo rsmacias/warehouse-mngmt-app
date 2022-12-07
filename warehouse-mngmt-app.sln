@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "warehouseManagementSystem.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "warehouseManagementSystem.Infrastructure", "WarehouseMngmtSys.Infrastructure\warehouseManagementSystem.Infrastructure.csproj", "{4F837199-6FA6-4B3E-831C-BBDE84CC4A87}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "warehouseManagementSystem.Web.Tests", "WarehouseMngmtSys.Web.Tests\warehouseManagementSystem.Web.Tests.csproj", "{4FD6D7A6-9C34-42F7-9539-DFB17651551F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{4F837199-6FA6-4B3E-831C-BBDE84CC4A87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F837199-6FA6-4B3E-831C-BBDE84CC4A87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F837199-6FA6-4B3E-831C-BBDE84CC4A87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FD6D7A6-9C34-42F7-9539-DFB17651551F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FD6D7A6-9C34-42F7-9539-DFB17651551F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FD6D7A6-9C34-42F7-9539-DFB17651551F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FD6D7A6-9C34-42F7-9539-DFB17651551F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
