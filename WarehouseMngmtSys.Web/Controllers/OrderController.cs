@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using warehouseManagementSystem.Infrastructure;
 using warehouseManagementSystem.Web.Models;
 
-namespace WarehouseManagementSystem.Web.Controllers;
+namespace warehouseManagementSystem.Web.Controllers;
 
 public class OrderController : Controller {
 
