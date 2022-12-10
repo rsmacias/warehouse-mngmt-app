@@ -53,12 +53,16 @@ public class OrderController : Controller {
 
         if (customer is null) {
             customer = new Customer {
+                Id = Guid.NewGuid(),
                 Name = model.Customer.Name,
                 Address = model.Customer.Address,
                 PostalCode = model.Customer.PostalCode,
                 Country = model.Customer.Country,
                 PhoneNumber = model.Customer.PhoneNumber
             };
+
+            _customerRepository.Add(customer);
+            _customerRepository.SaveChanges();
         } else {
             customer.Address = model.Customer.Address;
             customer.PostalCode = model.Customer.PostalCode;
@@ -80,7 +84,7 @@ public class OrderController : Controller {
                 })
                 .ToList(),
 
-            Customer = customer,
+            CustomerId = customer.Id,
             ShippingProviderId = _shippingProviderRepository.All().First().Id, 
             CreatedAt = DateTimeOffset.UtcNow
         };
