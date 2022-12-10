@@ -8,24 +8,15 @@ namespace warehouseManagementSystem.Web.Controllers;
 
 public class OrderController : Controller {
 
-    private readonly IRepository<Order> _orderRepository;
-    private readonly IRepository<ShippingProvider> _shippingProviderRepository;
-    private readonly IRepository<Item> _itemRepository;
-    private readonly IRepository<Customer> _customerRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public OrderController(IRepository<Order> orderRepository, 
-                           IRepository<ShippingProvider> shippingProviderRepository, 
-                           IRepository<Item> itemRepository,
-                           IRepository<Customer> customerRepository) {
-        _orderRepository = orderRepository;
-        _shippingProviderRepository = shippingProviderRepository;
-        _itemRepository = itemRepository;
-        _customerRepository = customerRepository;
+    public OrderController(IUnitOfWork unitOfWork) {
+        _unitOfWork = unitOfWork;
     }
 
     public IActionResult Index() {
         var orders = 
-            _orderRepository.Find(
+            _unitOfWork.OrderRepository.Find(
                     order => 
                     order.CreatedAt > DateTime.UtcNow.AddDays(-1)
             );
@@ -34,7 +25,7 @@ public class OrderController : Controller {
     }
 
     public IActionResult Create() {
-        var items = _itemRepository.All();  
+        var items = _unitOfWork.ItemRepository.All();  
 
         return View(items);
     }
@@ -47,7 +38,8 @@ public class OrderController : Controller {
         if (string.IsNullOrWhiteSpace(model.Customer.Name)) return BadRequest("Customer needs a name");
         #endregion
 
-        var customer = _customerRepository
+        var customer = _unitOfWork
+                        .CustomerRepository
                         .Find(customer => customer.Name == model.Customer.Name)
                         .FirstOrDefault();
 
@@ -60,17 +52,13 @@ public class OrderController : Controller {
                 Country = model.Customer.Country,
                 PhoneNumber = model.Customer.PhoneNumber
             };
-
-            _customerRepository.Add(customer);
-            _customerRepository.SaveChanges();
         } else {
             customer.Address = model.Customer.Address;
             customer.PostalCode = model.Customer.PostalCode;
             customer.Country = model.Customer.Country;
             customer.PhoneNumber = model.Customer.PhoneNumber;
 
-            _customerRepository.Update(customer);
-            _customerRepository.SaveChanges();
+            _unitOfWork.CustomerRepository.Update(customer);
         }
 
         var order = new Order
@@ -84,13 +72,14 @@ public class OrderController : Controller {
                 })
                 .ToList(),
 
-            CustomerId = customer.Id,
-            ShippingProviderId = _shippingProviderRepository.All().First().Id, 
+            Customer = customer,
+            ShippingProviderId = _unitOfWork.ShippingProviderRepository.All().First().Id, 
             CreatedAt = DateTimeOffset.UtcNow
         };
 
-        _orderRepository.Add(order);
-        _orderRepository.SaveChanges();
+        _unitOfWork.OrderRepository.Add(order);
+        
+        _unitOfWork.OrderRepository.SaveChanges();
 
         return Ok("Order Created");
     }
