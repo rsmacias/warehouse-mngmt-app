@@ -55,6 +55,7 @@ public class OrderController : Controller {
 
         var order = new Order
         {
+            Id = Guid.NewGuid(),
             LineItems = model.LineItems
                 .Select(line => new LineItem { 
                     Id = Guid.NewGuid(), 
