@@ -11,13 +11,16 @@ public class OrderController : Controller {
     private readonly IRepository<Order> _orderRepository;
     private readonly IRepository<ShippingProvider> _shippingProviderRepository;
     private readonly IRepository<Item> _itemRepository;
+    private readonly IRepository<Customer> _customerRepository;
 
     public OrderController(IRepository<Order> orderRepository, 
                            IRepository<ShippingProvider> shippingProviderRepository, 
-                           IRepository<Item> itemRepository) {
+                           IRepository<Item> itemRepository,
+                           IRepository<Customer> customerRepository) {
         _orderRepository = orderRepository;
         _shippingProviderRepository = shippingProviderRepository;
         _itemRepository = itemRepository;
+        _customerRepository = customerRepository;
     }
 
     public IActionResult Index() {
@@ -44,14 +47,27 @@ public class OrderController : Controller {
         if (string.IsNullOrWhiteSpace(model.Customer.Name)) return BadRequest("Customer needs a name");
         #endregion
 
-        var customer = new Customer
-        {
-            Name = model.Customer.Name,
-            Address = model.Customer.Address,
-            PostalCode = model.Customer.PostalCode,
-            Country = model.Customer.Country,
-            PhoneNumber = model.Customer.PhoneNumber
-        };
+        var customer = _customerRepository
+                        .Find(customer => customer.Name == model.Customer.Name)
+                        .FirstOrDefault();
+
+        if (customer is null) {
+            customer = new Customer {
+                Name = model.Customer.Name,
+                Address = model.Customer.Address,
+                PostalCode = model.Customer.PostalCode,
+                Country = model.Customer.Country,
+                PhoneNumber = model.Customer.PhoneNumber
+            };
+        } else {
+            customer.Address = model.Customer.Address;
+            customer.PostalCode = model.Customer.PostalCode;
+            customer.Country = model.Customer.Country;
+            customer.PhoneNumber = model.Customer.PhoneNumber;
+
+            _customerRepository.Update(customer);
+            _customerRepository.SaveChanges();
+        }
 
         var order = new Order
         {
