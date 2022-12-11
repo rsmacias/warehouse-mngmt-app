@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -68,6 +69,11 @@ public partial class WarehouseSQLiteContext : WarehouseContext
 
             entity.Property(o => o.CreatedAt).HasConversion(v => v.ToString(), 
                                                             v => DateTimeOffset.Parse(v));
+        });
+
+        modelBuilder.Entity<Customer>(entity => {
+            entity.Property(c => c.Logo).HasConversion(l => l == null ? string.Empty : Encoding.Default.GetString(l),
+                                                       l => Encoding.Default.GetBytes(l));
         });
 
         modelBuilder.Entity<Warehouse>(entity =>

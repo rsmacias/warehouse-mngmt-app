@@ -16,6 +16,11 @@ namespace warehouseManagementSystem.Infrastructure
         public string PostalCode { get; set; } = null!;
         public string Country { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
+        private byte[]? logo;
+        public byte[]? Logo {
+            get => logo; 
+            set => logo = value; 
+        }
 
         public virtual ICollection<Order> Orders { get; set; }
     }
