@@ -13,6 +13,11 @@
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted">@customer.Name</span>
             </h4>
+            @{
+                var logo = customer.Logo;
+                var logoAsBase64 = System.Text.Encoding.Default.GetString(logo);
+            }
+            <img src="data:image/png;base64,@logoAsBase64" width="200" height="200" alt="@customer.Name">
             <div>
                 <p>@customer.Address</p>
                 <p>@customer.PostalCode</p>
